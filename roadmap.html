@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project J — Roadmap</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      padding: 40px 24px;
+      min-height: 100vh;
+    }
+
+    header {
+      max-width: 860px;
+      margin: 0 auto 40px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .progress-bar-wrap {
+      margin-top: 16px;
+      background: #1e1e1e;
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #a78bfa);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .progress-label {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .phase {
+      max-width: 860px;
+      margin: 0 auto 32px;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .phase-badge {
+      background: #1e1e1e;
+      border: 1px solid #2e2e2e;
+      color: #a78bfa;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .phase-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .components {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .component {
+      background: #161616;
+      border: 1px solid #252525;
+      border-radius: 10px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .component:hover {
+      border-color: #3a3a3a;
+      background: #1a1a1a;
+    }
+
+    .component.done {
+      border-color: #1a3a2a;
+      background: #111a14;
+    }
+
+    .component-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid #333;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .component.done .checkbox {
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .checkmark {
+      display: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .component.done .checkmark { display: block; }
+
+    .component-meta {
+      flex: 1;
+    }
+
+    .component-number {
+      font-size: 11px;
+      color: #555;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .component-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e0e0e0;
+      margin-top: 2px;
+    }
+
+    .component.done .component-name {
+      color: #888;
+      text-decoration: line-through;
+      text-decoration-color: #444;
+    }
+
+    .expand-icon {
+      color: #444;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+
+    .component.open .expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .component-detail {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #222;
+    }
+
+    .component.open .component-detail { display: block; }
+
+    .detail-section {
+      margin-bottom: 14px;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .detail-text {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    .detail-text a {
+      color: #818cf8;
+      text-decoration: none;
+    }
+
+    .detail-text a:hover { text-decoration: underline; }
+
+    .output-block {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 7px;
+      padding: 12px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #86efac;
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .tag-ai { background: #2d1b69; color: #a78bfa; }
+    .tag-backend { background: #1a2e1a; color: #86efac; }
+    .tag-frontend { background: #1a2030; color: #93c5fd; }
+    .tag-db { background: #2e1a1a; color: #fca5a5; }
+    .tag-auth { background: #2e2a1a; color: #fcd34d; }
+
+    .phase-divider {
+      max-width: 860px;
+      margin: 0 auto 32px;
+      border: none;
+      border-top: 1px solid #1e1e1e;
+    }
+
+    .stats {
+      max-width: 860px;
+      margin: 0 auto 32px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat {
+      background: #161616;
+      border: 1px solid #252525;
+      border-radius: 10px;
+      padding: 14px 18px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #555;
+      margin-top: 2px;
+    }
+
+    #completed-count { color: #22c55e; }
+    #remaining-count { color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Project J — Build Roadmap</h1>
+  <p>Agentic Job Application Platform &nbsp;·&nbsp; FastAPI + Next.js + Supabase + LangChain</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <p class="progress-label" id="progress-label">0 of 30 components completed</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="stat-number" id="completed-count">0</div><div class="stat-label">Completed</div></div>
+  <div class="stat"><div class="stat-number" id="remaining-count">30</div><div class="stat-label">Remaining</div></div>
+  <div class="stat"><div class="stat-number" id="phase-count">9</div><div class="stat-label">Phases</div></div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 1</span>
+    <span class="phase-title">Backend Foundation</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c1">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 01 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">FastAPI Hello World</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">A running FastAPI server in <code>backend/main.py</code> with one GET endpoint at <code>/</code>.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Why</div>
+          <div class="detail-text">Every component after this runs on top of this server. If this doesn't work, nothing works.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output — hit http://localhost:8000</div>
+          <div class="output-block">{"message": "server is running"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://fastapi.tiangolo.com/tutorial/first-steps" target="_blank">fastapi.tiangolo.com/tutorial/first-steps</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c2">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 02 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Settings & Environment Variables</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text"><code>backend/core/config.py</code> using pydantic-settings that reads your <code>.env</code> file and exposes a <code>settings</code> object.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Why</div>
+          <div class="detail-text">You never hardcode secrets. Every component that talks to Supabase or OpenAI imports from here.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">from backend.core.config import settings
+print(settings.SUPABASE_URL)
+# https://yourproject.supabase.co</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings" target="_blank">docs.pydantic.dev/latest/concepts/pydantic_settings</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c3">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 03 &nbsp;·&nbsp; <span class="tag tag-db">Database</span></div>
+          <div class="component-name">Supabase Connection</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text"><code>backend/core/database.py</code> — creates a single Supabase client using settings and exports it.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Why</div>
+          <div class="detail-text">Every route that reads/writes data imports this client. Create it once, reuse everywhere.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">from backend.core.database import supabase
+result = supabase.table("test").select("*").execute()
+print(result)
+# data=[] count=None  ← empty but connection works</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://supabase.com/docs/reference/python/introduction" target="_blank">supabase.com/docs/reference/python/introduction</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 2 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 2</span>
+    <span class="phase-title">Database Schema</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c4">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 04 &nbsp;·&nbsp; <span class="tag tag-db">Database</span></div>
+          <div class="component-name">Supabase Tables (SQL)</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">In the Supabase SQL editor, write SQL to create: <code>profiles</code>, <code>hr_profiles</code>, <code>messages</code> tables.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Why</div>
+          <div class="detail-text">Before writing a single endpoint, the tables need to exist. FastAPI talks to these tables.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output — Supabase Table Editor shows</div>
+          <div class="output-block">profiles      ✓
+hr_profiles   ✓
+messages      ✓</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://supabase.com/docs/guides/database/tables" target="_blank">supabase.com/docs/guides/database/tables</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 3 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 3</span>
+    <span class="phase-title">Authentication</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c5">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 05 &nbsp;·&nbsp; <span class="tag tag-auth">Auth</span></div>
+          <div class="component-name">Candidate Signup</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/auth/candidate/signup</code> — accepts email + password, creates user in Supabase Auth, creates row in <code>profiles</code> table.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// Success
+{"message": "Account created successfully", "user_id": "uuid-here"}
+
+// Email already exists
+{"detail": "Email already registered"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://supabase.com/docs/reference/python/auth-signup" target="_blank">supabase.com/docs/reference/python/auth-signup</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c6">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 06 &nbsp;·&nbsp; <span class="tag tag-auth">Auth</span></div>
+          <div class="component-name">Candidate Login</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/auth/candidate/login</code> — accepts email + password, returns a JWT token.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// Success
+{"access_token": "eyJhbGci...", "token_type": "bearer"}
+
+// Wrong password
+{"detail": "Invalid credentials"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt" target="_blank">fastapi.tiangolo.com/tutorial/security/oauth2-jwt</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c7">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 07 &nbsp;·&nbsp; <span class="tag tag-auth">Auth</span></div>
+          <div class="component-name">HR Signup + Login</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Same as Components 5 & 6 but for HRs. HR accounts get <code>verified: false</code> by default in <code>hr_profiles</code>.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">{"message": "HR account created. Pending verification.",
+ "user_id": "uuid-here",
+ "verified": false}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c8">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 08 &nbsp;·&nbsp; <span class="tag tag-auth">Auth</span></div>
+          <div class="component-name">Protected Routes (Depends)</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">A reusable <code>get_current_user()</code> function using FastAPI's <code>Depends()</code> that verifies the JWT token on any protected endpoint.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// No token
+{"detail": "Not authenticated"}
+
+// Valid token
+{"message": "you are logged in as kaustubh@email.com"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://fastapi.tiangolo.com/tutorial/dependencies" target="_blank">fastapi.tiangolo.com/tutorial/dependencies</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 4 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 4</span>
+    <span class="phase-title">Candidate Profile</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c9">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 09 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Create / Update Profile</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">PUT <code>/candidate/profile</code> (protected) — lets a candidate fill in name, bio, skills, experience, target job role.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">{"message": "Profile updated",
+ "profile": {
+   "name": "Kaustubh Salunke",
+   "bio": "ML Engineer with RAG experience",
+   "skills": ["Python", "LangChain", "SQL"],
+   "target_role": "ML Engineer"
+ }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c10">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 10 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Resume Upload</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/candidate/resume</code> (protected) — accepts a PDF (max 5MB), uploads to Supabase Storage, saves URL in <code>profiles</code>.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// Success
+{"message": "Resume uploaded successfully",
+ "resume_url": "https://supabase.co/storage/.../resume.pdf"}
+
+// Wrong file type
+{"detail": "Only PDF files are accepted"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://supabase.com/docs/guides/storage/uploads" target="_blank">supabase.com/docs/guides/storage/uploads</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c11">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 11 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Intro Video Upload</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/candidate/video</code> (protected) — accepts mp4 (max 100MB), uploads to Supabase Storage, saves URL in <code>profiles</code>.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">{"message": "Intro video uploaded successfully",
+ "video_url": "https://supabase.co/storage/.../intro.mp4"}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 5 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 5</span>
+    <span class="phase-title">HR Capabilities</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c12">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 12 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">View Candidate Profiles (Verified HR only)</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">GET <code>/hr/candidates</code> (protected + verified HR only) — returns list of all candidate profiles.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// Verified HR
+{"candidates": [
+  {"id": "uuid", "name": "Kaustubh", "skills": ["Python"], "target_role": "ML Engineer"},
+  {"id": "uuid", "name": "Jane", "skills": ["React"], "target_role": "Frontend Dev"}
+]}
+
+// Unverified HR
+{"detail": "Account pending verification"}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 6 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 6</span>
+    <span class="phase-title">Messaging</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c13">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 13 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">HR Sends Message</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/messages/send</code> (verified HR only) — sends a message to a candidate, tagged with the HR's current job role search.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// Success
+{"message": "Message sent", "message_id": "uuid",
+ "to": "candidate-uuid", "job_role_tag": "Data Scientist"}
+
+// Candidate tries to initiate
+{"detail": "Candidates cannot initiate conversations"}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c14">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 14 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Candidate Replies</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/messages/reply</code> (candidate only) — lets a candidate reply to an existing thread. Cannot start new threads.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">{"message": "Reply sent", "thread_id": "uuid"}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c15">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 15 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Get Messages (Organized by Job Role)</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">GET <code>/messages</code> — returns messages grouped by job role for HRs, flat list for candidates.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output (HR)</div>
+          <div class="output-block">{"inbox": {
+  "Data Scientist": [
+    {"candidate": "Kaustubh", "last_message": "Thanks!", "unread": true}
+  ],
+  "ML Engineer": [
+    {"candidate": "Jane", "last_message": "I'm interested", "unread": false}
+  ]
+}}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 7 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 7</span>
+    <span class="phase-title">AI Agent</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c16">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 16 &nbsp;·&nbsp; <span class="tag tag-ai">AI</span></div>
+          <div class="component-name">Resume Text Extraction</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">A service in <code>backend/services/agent.py</code> — downloads a resume PDF from Supabase Storage and extracts raw text using <code>pdfplumber</code>.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">text = extract_resume_text(resume_url)
+print(text[:200])
+# "Kaustubh Salunke | ML Engineer
+#  Skills: Python, LangChain, SQL, RAG
+#  Experience: Built a multi-agent system..."</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://github.com/jsvine/pdfplumber" target="_blank">github.com/jsvine/pdfplumber</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c17">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 17 &nbsp;·&nbsp; <span class="tag tag-ai">AI</span></div>
+          <div class="component-name">Resume Embedding Pipeline</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">A function that takes extracted resume text, generates an embedding via OpenAI, and stores the vector in pgvector in Supabase. Triggered automatically on resume upload.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output — check Supabase after upload</div>
+          <div class="output-block">profiles table:
+id: uuid | name: Kaustubh | embedding: [0.023, -0.141, 0.089, ...]  ✓</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://platform.openai.com/docs/guides/embeddings" target="_blank">platform.openai.com/docs/guides/embeddings</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c18">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 18 &nbsp;·&nbsp; <span class="tag tag-ai">AI</span></div>
+          <div class="component-name">Natural Language Candidate Search</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">POST <code>/hr/search</code> (verified HR only) — takes a natural language prompt, embeds it, runs cosine similarity search against all candidate embeddings in pgvector, returns ranked results.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">// POST /hr/search
+// body: {"query": "data scientist with NLP and Python experience"}
+
+{"query": "data scientist with NLP and Python experience",
+ "results": [
+   {"name": "Kaustubh", "score": 0.94, "skills": ["Python", "NLP", "LangChain"]},
+   {"name": "Jane",     "score": 0.81, "skills": ["Python", "spaCy", "BERT"]},
+   {"name": "Alex",     "score": 0.73, "skills": ["Python", "SQL", "ML"]}
+ ]}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://supabase.com/docs/guides/ai/vector-columns" target="_blank">supabase.com/docs/guides/ai/vector-columns</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c19">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 19 &nbsp;·&nbsp; <span class="tag tag-ai">AI</span></div>
+          <div class="component-name">LangChain Agent Wrapper</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Wrap the vector search inside a LangChain agent that can do multi-step reasoning — interpret complex requirements, filter, and explain rankings.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">{"query": "senior ML engineer who has led teams and knows LLMs",
+ "agent_reasoning": "Searched for ML + leadership + LLM experience. Filtered out juniors.",
+ "results": [
+   {"name": "Kaustubh", "score": 0.96,
+    "reason": "5 years ML, managed 3 engineers, built RAG systems"}
+ ]}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://python.langchain.com/docs/modules/agents" target="_blank">python.langchain.com/docs/modules/agents</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 8 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 8</span>
+    <span class="phase-title">Frontend (Next.js)</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c20">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 20 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">Next.js Project Setup + Routing</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Initialize a Next.js project with Tailwind CSS + shadcn/ui. Set up folder structure and basic routing for candidate and HR sections.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output — running at http://localhost:3000</div>
+          <div class="output-block">/ → landing page
+/candidate/login
+/candidate/profile
+/hr/login
+/hr/dashboard</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://nextjs.org/learn" target="_blank">nextjs.org/learn</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c21">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 21 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">Candidate Auth Pages</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Login and signup pages for candidates. Connects to Components 5 & 6. Stores JWT token after login.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">Signup form → POST /auth/candidate/signup → redirect to /candidate/profile
+Login form  → POST /auth/candidate/login  → store token → redirect to /candidate/profile</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c22">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 22 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">Candidate Profile Page</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Profile edit form + resume upload + video upload UI. Connects to Components 9, 10, 11.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">Form fields: name, bio, skills, target role
+File upload: resume (PDF only)
+File upload: intro video (MP4 only)
+Save button → PUT /candidate/profile</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c23">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 23 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">Candidate Messages Page</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Inbox showing messages from HRs. Reply box visible, no compose button. Connects to Components 14 & 15.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">List of conversations from HRs
+Click conversation → see thread
+Reply box at bottom (no "New Message" button)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c24">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 24 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">HR Auth Pages</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Login and signup for HRs. After login, if <code>verified: false</code>, show a "pending verification" screen instead of dashboard. Connects to Component 7.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">verified: true  → redirect to /hr/dashboard
+verified: false → show "Your account is pending verification" screen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c25">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 25 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">HR Dashboard + Candidate Cards</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Grid of candidate cards showing name, skills, target role, video preview. Connects to Component 12.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">GET /hr/candidates → render candidate cards
+Each card: name | skills | target role | "Message" button</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c26">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 26 &nbsp;·&nbsp; <span class="tag tag-ai">AI</span> <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">HR Search Bar (Agent)</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">A search bar on the HR dashboard. HR types a natural language prompt → results appear ranked with match scores. Connects to Component 19.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">HR types: "data scientist with NLP experience"
+→ POST /hr/search
+→ ranked candidate cards appear with match score badges</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c27">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 27 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">HR Messaging Inbox</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Inbox grouped by job role. Clicking a role expands the candidates in that group. Connects to Components 13 & 15.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">▼ Data Scientist
+    Kaustubh  "Thanks for reaching out!"  ● unread
+    Jane      "I'm interested"
+
+▼ ML Engineer
+    Alex      "When can we talk?"</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="phase-divider"/>
+
+<!-- PHASE 9 -->
+<div class="phase">
+  <div class="phase-header">
+    <span class="phase-badge">Phase 9</span>
+    <span class="phase-title">Deployment</span>
+  </div>
+  <div class="components">
+
+    <div class="component" id="c28">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 28 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span></div>
+          <div class="component-name">Deploy FastAPI to Railway</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Deploy the FastAPI backend to Railway (or Render). Set environment variables in the dashboard.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">https://project-j-api.railway.app/
+→ {"message": "server is running"}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://railway.app" target="_blank">railway.app</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c29">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 29 &nbsp;·&nbsp; <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">Deploy Next.js to Vercel</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Connect GitHub repo to Vercel. Set the production API URL as an environment variable in Vercel dashboard.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">https://project-j.vercel.app → live web app</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Resource</div>
+          <div class="detail-text"><a href="https://vercel.com" target="_blank">vercel.com</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component" id="c30">
+      <div class="component-top">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="component-meta">
+          <div class="component-number">Component 30 &nbsp;·&nbsp; <span class="tag tag-backend">Backend</span> <span class="tag tag-frontend">Frontend</span></div>
+          <div class="component-name">End-to-End Testing + Final Connect</div>
+        </div>
+        <div class="expand-icon">▼</div>
+      </div>
+      <div class="component-detail">
+        <div class="detail-section">
+          <div class="detail-label">What to build</div>
+          <div class="detail-text">Full flow test: candidate signs up → uploads resume → HR logs in → searches with AI → messages candidate → candidate replies.</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Expected output</div>
+          <div class="output-block">1. Candidate signs up            ✓
+2. Candidate uploads resume      ✓
+3. Resume gets embedded          ✓
+4. HR logs in (verified)         ✓
+5. HR searches: "ML engineer"    ✓
+6. Candidate appears ranked      ✓
+7. HR sends message              ✓
+8. Candidate replies             ✓
+9. Everything live on Vercel     ✓</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const TOTAL = 30;
+
+  function getState() {
+    const saved = localStorage.getItem('projectj_progress');
+    return saved ? JSON.parse(saved) : {};
+  }
+
+  function saveState(state) {
+    localStorage.setItem('projectj_progress', JSON.stringify(state));
+  }
+
+  function updateStats() {
+    const state = getState();
+    const completed = Object.values(state).filter(Boolean).length;
+    const remaining = TOTAL - completed;
+    const pct = Math.round((completed / TOTAL) * 100);
+
+    document.getElementById('completed-count').textContent = completed;
+    document.getElementById('remaining-count').textContent = remaining;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent =
+      completed + ' of ' + TOTAL + ' components completed (' + pct + '%)';
+  }
+
+  function initComponents() {
+    const state = getState();
+
+    for (let i = 1; i <= TOTAL; i++) {
+      const el = document.getElementById('c' + i);
+      if (!el) continue;
+
+      if (state['c' + i]) el.classList.add('done');
+
+      const top = el.querySelector('.component-top');
+      const checkbox = el.querySelector('.checkbox');
+      const expandIcon = el.querySelector('.expand-icon');
+
+      // Toggle done on checkbox click
+      checkbox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const s = getState();
+        s['c' + i] = !s['c' + i];
+        saveState(s);
+        if (s['c' + i]) el.classList.add('done');
+        else el.classList.remove('done');
+        updateStats();
+      });
+
+      // Toggle expand on row click
+      top.addEventListener('click', function(e) {
+        if (e.target === checkbox || checkbox.contains(e.target)) return;
+        el.classList.toggle('open');
+      });
+    }
+
+    updateStats();
+  }
+
+  initComponents();
+</script>
+
+</body>
+</html>
