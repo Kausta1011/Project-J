@@ -89,3 +89,11 @@ async def create_items(item : Item):
         item_dict.update({"price_with_tax" : price_with_tax})
     return item_dict
 
+
+@app.put("/items/{item_id}")
+def update_item(item_id : int, item : Item, q : str | None = None):
+    result = {"item_id":item_id, **item.model_dump()}
+    if q:
+        result.update({"q": q})
+    return result
+
