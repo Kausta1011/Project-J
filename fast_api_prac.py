@@ -1,4 +1,3 @@
-
 from enum import Enum
 from fastapi import FastAPI, HTTPException
 
@@ -136,7 +135,7 @@ class User(BaseModel):
 
 
 @app.post("/users2/")
-def user(user: User):
+def get_user2(user: User):
 
     return {
     **user.model_dump(),
@@ -239,7 +238,7 @@ resumes_db = {
 
 
 @app.put("/resumes/{resume_id}")
-def get_user_by_resume(resume_id : int, resume : Resumes, notify : bool | None = None):
+def update_resume_by_id(resume_id : int, resume : Resumes, notify : bool | None = None):
 
     if resume_id in resumes_db:
         resumes_db[resume_id] = resume.model_dump()
@@ -292,4 +291,79 @@ Review:
 1. Why async def?? It should not execute before moving ahead
 2. how is the user going to update?? Its a Pydantic object not a dictionary, first need to convert into a dict. Use model_dump(). Biggest flag in the code
 3. What if user updates something wrong or maybe a wrong field by mistake? How will he know? return whats being updated.
+4. skills: list should be list[str]
+"""
+
+
+"""
+Q1.
+Build a GET /resumes/ endpoint that returns all resumes from resumes_db. 
+Accept an optional query parameter location: str — if provided, return only resumes from that city.location
+"""
+
+@app.get("/resumes")
+def get_resumes(location : str | None = None):
+    list_of_resumes = []
+
+    for key, value in resumes_db.items():
+        response = {"id":key, **value}
+        if location:
+            if location == response["location"]:
+                list_of_resumes.append(response)
+        elif not location:
+            list_of_resumes.append(response)
+    if not list_of_resumes:
+        raise HTTPException(status_code=404, detail="Location not found")
+
+    return list_of_resumes
+
+
+"""
+Q2.
+
+Build a GET /resumes/{resume_id} endpoint that returns a single resume by ID.
+ If not found, raise a 404. If found, also add a field "total_skills" with the count of skills in the response.
+"""
+
+@app.get("/resumes/{resume_id}")
+def get_resume_by_id(resume_id : int):
+    if resume_id in resumes_db:
+        total_skills= 0
+        for skill in resumes_db[resume_id]["skills"]:
+            total_skills +=1
+        return {**resumes_db[resume_id],"total_skills" : total_skills}
+    
+    raise HTTPException(status_code=404,detail="Not a valid user id")
+        
+
+"""
+Q3.
+
+Build a DELETE /resumes/{resume_id} endpoint that removes a resume from resumes_db. 
+If not found, raise a 404. Return {"message": "Resume deleted successfully"} on success.
+"""
+
+@app.delete("/resumes/{resume_id}")
+def delete_resume(resume_id : int):
+    if resume_id in resumes_db:
+        del resumes_db[resume_id]
+        return {"message": "Resume deleted successfully"}
+    else:
+        raise HTTPException(status_code= 404, detail = "Resume not found")
+
+"""
+Q4.
+
+Build a POST /resumes/ endpoint that adds a new resume to resumes_db. 
+The request body should only accept (name, skills, location, ready_to_relocate) — no id. 
+Auto-generate the id as max(resumes_db.keys()) + 1. Return the created resume including the generated id.
+"""
+
+
+"""
+Q5.
+
+Refactor Q4 and the PUT endpoint from our session to use two separate models —
+ResumeCreate for the request body and ResumeResponse for the response, as discussed in the production pattern. 
+Use response_model=ResumeResponse on both endpoints.
 """
