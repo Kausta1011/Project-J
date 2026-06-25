@@ -97,3 +97,199 @@ def update_item(item_id : int, item : Item, q : str | None = None):
         result.update({"q": q})
     return result
 
+
+"""
+Q1. A recruiter asks: "What's the difference between a path parameter, query parameter, and request body? When would you use each?"
+-> a path parameter goes directly into the url, a query parameter is defined inside of a function, it could be set to default as well, and a request body is a complex info that could not be sent via url so its defined inside an object such as pydantic base model.
+
+Q2. "If I send a POST request with {"age": "25"} to an endpoint expecting age: int, what does FastAPI do with it? What if I send {"age": "hello"}?"
+if you send a integer in a string format, fastapi will convert the string into integer but if you send a string where int is required then fastapi will raise a error
+
+
+Q3. "What is the difference between async def and def in a FastAPI route? Which one would you use if your database library doesn't support await?"
+async def tells python to complete other tasks as this will take time to complete, keep coming in between to check upon the task. def is sequential, it finishes a operation and moves forward. If await is not supported then you can simply use def or else write your own function
+
+
+Q4. "Why should API keys never be hardcoded in your Python files?"
+Data leakage is the main reason/
+
+
+Q5. "A user hits your /resumes/ endpoint and gets a 422 error. What does that mean and what are the possible causes?"
+422 means Unprocessable content. The user might have uploaded a wrong format
+
+
+Q6. Build a POST /users/ endpoint that accepts:
+
+username (required, string)
+email (required, string)
+age (optional, int)
+is_active (bool, defaults to True)
+
+Return the user data plus a field "account_status": "active" if is_active is True, else "inactive".
+"""
+
+class User(BaseModel):
+    username: str
+    email : str
+    age : int
+    is_active : bool = True
+
+
+@app.post("/users2/")
+def user(user: User):
+
+    return {
+    **user.model_dump(),
+    "account_status":"active" if user.is_active else "inactive"
+    }
+
+
+"""
+Q7. You have this fake DB:
+Build a GET /users/ endpoint that:
+
+Returns all users by default
+Accepts an optional query parameter role to filter by role
+Returns a 404 message if no users match
+
+"""
+users_db = {
+    1: {"name": "Kaustubh", "role": "admin"},
+    2: {"name": "John", "role": "user"},
+    3: {"name": "Sara", "role": "user"}
+}
+
+
+@app.get("/fakeusers")
+def return_users(q : str | None = None):
+    if q:
+        matched = []
+        for u in users_db.values():
+            if u["role"] == q:
+                matched.append(u)
+        if not matched:
+            raise HTTPException(status_code= 404, detail= "User not found")
+        return matched
+            
+    return list(users_db.values())
+
+
+"""
+Q8. What is wrong with this code? Fix it:
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    return users_db[user_id]
+    
+"""
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    for u in users_db:
+        if u == user_id:
+            return u
+    raise HTTPException(status_code =404, detail = "User not found")
+
+
+
+"""
+Q9. Build a PUT /resumes/{resume_id} endpoint that:
+
+Accepts a resume ID from the URL
+Accepts updated resume data (name, skills as list of strings, location, ready_to_relocate as bool) from the request body
+Accepts an optional query parameter notify: bool -- if True, add "notification": "User has been notified" to the response
+"""
+
+class Resumes(BaseModel):
+    name : str
+    skills : list[str]
+    location :str
+    ready_to_relocate : bool
+
+resumes_db = {
+    1:{
+        "name": "Alice Johnson",
+        "skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+        "location": "Berlin",
+        "ready_to_relocate": False
+    },
+    2:{
+        "name": "Bob Smith",
+        "skills": ["JavaScript", "React", "Node.js", "MongoDB"],
+        "location": "Munich",
+        "ready_to_relocate": True
+    },
+    3:{
+        "name": "Carol White",
+        "skills": ["Machine Learning", "PyTorch", "Scikit-learn", "Python"],
+        "location": "Hamburg",
+        "ready_to_relocate": True
+    },
+    4:{
+        "name": "David Lee",
+        "skills": ["Java", "Spring Boot", "Kubernetes", "AWS"],
+        "location": "Frankfurt",
+        "ready_to_relocate": False
+    },
+    5:{
+        "name": "Eva Müller",
+        "skills": ["Data Engineering", "Spark", "Airflow", "SQL"],
+        "location": "Berlin",
+        "ready_to_relocate": False
+    }
+}
+
+
+@app.put("/resumes/{resume_id}")
+def get_user_by_resume(resume_id : int, resume : Resumes, notify : bool | None = None):
+
+    if resume_id in resumes_db:
+        resumes_db[resume_id] = resume.model_dump()
+
+        if notify:
+            response = {**resumes_db[resume_id],"notification": "User has been notified"}
+            return response
+
+        return resumes_db[resume_id] 
+
+
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    
+
+
+
+
+@app.post("/users2/")
+def user(user: User):
+
+    return {
+    **user.model_dump(),
+    "account_status":"active" if user.is_active else "inactive"
+    }
+
+
+
+
+"""
+Q10. A junior developer on your team writes this:
+"""
+
+
+# class UserUpdate(BaseModel):
+#     username: str
+#     email: str
+#     age: int
+#     location: str
+#     skills: list
+
+# @app.put("/users/{user_id}")
+# async def update_user(user_id: int, user: UserUpdate):
+#     db.update(user_id, user)
+#     return {"message": "Updated"}
+
+"""
+Review:
+1. Why async def?? It should not execute before moving ahead
+2. how is the user going to update?? Its a Pydantic object not a dictionary, first need to convert into a dict. Use model_dump(). Biggest flag in the code
+3. What if user updates something wrong or maybe a wrong field by mistake? How will he know? return whats being updated.
+"""
