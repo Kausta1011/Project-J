@@ -359,6 +359,19 @@ The request body should only accept (name, skills, location, ready_to_relocate) 
 Auto-generate the id as max(resumes_db.keys()) + 1. Return the created resume including the generated id.
 """
 
+@app.post("/resumes/add_resume")
+def create_new_resume(resume : Resumes):
+    # If user already exists, warning
+    response = resume.model_dump()
+    for r in resumes_db.values():
+        if response["name"] == r["name"]:
+            raise HTTPException(status_code= 409, detail="User already exists")
+
+    new_id = max(resumes_db.keys())+1
+    resumes_db[new_id] = response
+
+    return {"id":new_id, **response}
+
 
 """
 Q5.
@@ -367,3 +380,39 @@ Refactor Q4 and the PUT endpoint from our session to use two separate models —
 ResumeCreate for the request body and ResumeResponse for the response, as discussed in the production pattern. 
 Use response_model=ResumeResponse on both endpoints.
 """
+
+class ResumeCreate(BaseModel):
+    name : str
+    skills : list[str]
+    location : str
+    ready_to_relocate : bool
+
+class ResumeResponse(BaseModel):
+    id : int
+    name : str
+    skills : list[str]
+    location : str
+    ready_to_relocate : bool
+
+
+@app.post("/resumes/", response_model = ResumeResponse)
+def create_resume(resume : ResumeCreate):
+    response = resume.model_dump()
+    for r in resumes_db.values():
+        if response["name"] == r["name"]:
+            raise HTTPException(status_code=409, detail="Resume already exists")
+        
+    new_id = max(resumes_db.keys()) + 1
+    resumes_db[new_id] = response
+    return {"id" : new_id, **response}
+
+
+@app.put("/resumes/{resume_id}", response_model = ResumeResponse)
+def update_resume(resume : ResumeCreate, resume_id : int):
+    response = resume.model_dump()
+    if resume_id in resumes_db:
+        resumes_db[resume_id] = response
+        return {"id": resume_id, **response}
+    
+    else:
+        raise HTTPException(status_code= 404, detail="resume not found")
